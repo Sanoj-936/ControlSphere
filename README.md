@@ -1,6 +1,6 @@
 # 🏠 ControlSphere — Smart Home Automation System (C++17)
 
-> A console-based smart home simulation built in modern C++17, demonstrating real-world object-oriented design, role-based authentication, and device automation.
+> A modular, console-driven smart home management platform built in modern C++17 to showcase clean object-oriented architecture, role-based access control, and coordinated device automation.
 
 ![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg?style=flat-square&logo=c%2B%2B)
 ![OOP](https://img.shields.io/badge/Paradigm-OOP-orange.svg?style=flat-square)
@@ -12,16 +12,16 @@
 
 ## 📖 Overview
 
-**ControlSphere** is a console-based smart home automation system written entirely in **C++17** that models a smart home consisting of multiple rooms and smart devices. It simulates real-world home automation logic — including **role-based authentication**, **device control**, **security management**, and **predefined automation scenarios** — while serving as a practical demonstration of object-oriented software design.
+**ControlSphere** is an interactive, terminal-based smart home management system engineered in **C++17**. It models an interconnected residential environment where users can inspect and operate individual room appliances, configure security perimeters, and trigger coordinated automation routines through an intuitive, menu-driven interface.
 
-The system currently manages two rooms:
+The environment simulates two distinct living spaces:
 
 - **Living Room**
 - **Bedroom**
 
-Each room is automatically populated with a predefined set of smart devices when it is created — **Light, Fan, Air Conditioner (AC), Camera, and Door Lock**.
+When each room initializes, it automatically provisions an essential suite of smart appliances: **Light, Fan, Air Conditioner (AC), Camera, and Door Lock**.
 
-This project was built to demonstrate practical application of OOP principles, STL usage, memory management, and modular C++ system design — not as a toy exercise, but as a structured, extensible system.
+I built this project to explore how modern C++ patterns, clean separation of concerns, and robust object-oriented principles translate into a maintainable backend design. Rather than relying on monolithic scripts, ControlSphere structures its components around strong encapsulation, polymorphic device interfaces, smart-pointer memory ownership, and defensive input handling.
 
 ---
 
@@ -29,29 +29,29 @@ This project was built to demonstrate practical application of OOP principles, S
 
 | Category | Capabilities |
 |---|---|
-| **Authentication** | Role-based login (Admin / User), unique email identification, duplicate-account prevention, credential management |
-| **Device Control** | Light, Fan, AC, Camera, Door Lock — each with independent, validated state control |
-| **Automation** | Predefined scenarios: Good Night, Morning, Leave Home |
-| **Security** | Arm / Disarm system with live status reporting |
-| **User Management** | Admin-only creation, deletion, lookup, and modification of user accounts |
-| **Input Validation** | Guards against invalid menu choices, non-numeric input, invalid device parameters |
+| **Authentication** | Two-tier access control (`ADMIN` / `USER`), unique email-keyed directory, duplicate prevention, and clean session logout |
+| **Device Control** | Granular state manipulation for Lights, Fans, AC units, Cameras, and Door Locks with parameterized boundary checks |
+| **Automation** | Multi-device preset workflows: Good Morning, Good Night, and Leaving Home |
+| **Security** | Centralized security system supporting immediate arming, disarming, and real-time status inquiry |
+| **User Management** | Administrator-exclusive user administration: register new accounts, remove users, and query account existence |
+| **Input Validation** | Defensive stream guards against non-numeric entries, out-of-range menu selections, and illegal device metrics |
 
 ---
 
 ## 🔐 Authentication System
 
-The application implements a **role-based authentication system** with two distinct roles: `ADMIN` and `USER`.
+ControlSphere enforces a **role-based access control (RBAC)** model dividing access between two roles: `ADMIN` and `USER`.
 
-- Login / Logout
-- Unique, email-based account identification
-- Duplicate email/account prevention
-- Password-based login with role validation
-- Admin-only user creation, deletion, and modification
-- Admin authentication against reserved administrator credentials
+- Dedicated login and session logout workflows
+- Account identification keyed uniquely by email address
+- Guardrails preventing duplicate email registrations
+- Privilege verification upon credential validation
+- Administrator-only operations for registering and deleting accounts
+- Built-in default administrator credentials initialized at startup (`admin@smarthome.com` / `admin123`)
 
-User accounts are stored in an STL `unordered_map`, keyed by email, for efficient average-case account lookup.
+User records are maintained internally within an STL `unordered_map`, ensuring efficient average-case lookup when validating login credentials or checking user records.
 
-> **Note:** This is an educational-grade authentication mechanism. It does **not** implement password hashing, encryption, or cryptographically secure credential storage.
+> **Note:** Designed primarily as an architectural demonstration, this module stores credentials in memory during runtime and does not incorporate cryptographic hashing or persistent database storage.
 
 ---
 
@@ -70,7 +70,7 @@ User accounts are stored in an STL `unordered_map`, keyed by email, for efficien
 3. Security Status
 4. Logout
 
-Users can select rooms, view and control devices, run automation scenarios, and check security status — but do **not** have access to user management functionality, which is restricted to Admin accounts.
+Standard users have full access to inspect rooms, operate individual appliances, execute automation routines, and view current security alarms. However, user administration capabilities (creating, listing, or removing accounts) remain strictly locked down to administrators.
 
 ---
 
@@ -81,7 +81,7 @@ Users can select rooms, view and control devices, run automation scenarios, and 
 | **Living Room** | Light, Fan, AC, Camera, Door Lock |
 | **Bedroom** | Light, Fan, AC, Camera, Door Lock |
 
-Devices are automatically instantiated when a `Room` object is created. The system does not currently support dynamic addition or removal of devices during normal operation — the device layout is fixed by design.
+Every `Room` container automatically initializes its dedicated set of appliances upon construction. The topology maintains a fixed hardware layout reflecting a typical residential floorplan.
 
 ---
 
@@ -89,23 +89,23 @@ Devices are automatically instantiated when a `Room` object is created. The syst
 
 | Device | Capabilities |
 |---|---|
-| **Light** | Turn ON / OFF, change brightness (0–100, validated) |
-| **Fan** | Turn ON / OFF, change speed (validated) |
-| **AC** | Turn ON / OFF, change temperature (validated) |
-| **Camera** | Turn ON / OFF, start / stop recording |
-| **Door Lock** | Lock / Unlock, maintain lock status |
+| **Light** | Toggle power state (ON / OFF), set brightness level (0–100%) |
+| **Fan** | Toggle power state (ON / OFF), adjust speed settings (levels 1–3) |
+| **AC** | Toggle power state (ON / OFF), adjust target cooling temperature (16–30 °C) |
+| **Camera** | Toggle power state (ON / OFF), initiate and halt video recording |
+| **Door Lock** | Engage lock, release unlock, verify current latch status |
 
-All device classes derive from a common abstract base class, `SmartDevice`, ensuring consistent behavior across the device hierarchy.
+All hardware classes inherit from the abstract base class `SmartDevice`, establishing a unified interface for state transitions across the appliance spectrum.
 
 ---
 
 ## 🛡️ Security System
 
-The `SecuritySystem` component manages the home's overall security state:
+The centralized `SecuritySystem` unit monitors the overall home perimeter state:
 
-- **Arm** the system
-- **Disarm** the system
-- **Display** current security status
+- **Arm** the security perimeter
+- **Disarm** the security perimeter
+- **Display** live system armed/disarmed status
 
 ```
 Security Status: ARMED
@@ -115,15 +115,15 @@ Security Status: ARMED
 
 ## ⚙️ Automation
 
-The system includes an **Automation Engine** with three predefined scenarios:
+The **AutomationEngine** orchestrates batch state updates across multiple rooms and subsystems in response to daily home routines:
 
 | Mode | Behavior |
 |---|---|
-| **Good Night** | Turns off appropriate lights and fans, configures AC, locks doors, arms security system |
-| **Morning** | Turns on selected devices, unlocks doors, disarms security system |
-| **Leave Home** | Turns off lights, fans, and AC, locks doors, arms security system |
+| **Good Night** | Powers down living room lights and fans, adjusts bedroom comfort settings, secures all door locks, and arms the perimeter security system |
+| **Morning** | Deactivates security, unlocks entryways, and initializes daylight appliance states |
+| **Leave Home** | Shuts down idle appliances (lights, fans, air conditioning), secures all locks, and activates perimeter defense |
 
-Each automation mode demonstrates coordination across multiple independent system components — devices and security — triggered by a single user action.
+These routines illustrate synchronized coordination between independent device managers and security modules driven by a single invocation.
 
 ---
 
@@ -279,13 +279,13 @@ flowchart TD
 
 ## 🧠 Object-Oriented Design
 
-This project applies all four core OOP pillars using real components from the system:
+The architecture grounds itself in the foundational pillars of object-oriented programming:
 
 ### 1. Encapsulation
-Device state (power status, brightness, speed, temperature, lock state) is kept private and exposed only through controlled public methods, preventing invalid external state mutation.
+Internal state variables (such as operational status, brightness percentage, fan velocity, thermostat target, and lock states) are declared `protected` or `private`. Modifications occur exclusively through public getters and validated setter methods to prevent invalid state configurations.
 
 ### 2. Abstraction
-`SmartDevice` is an abstract base class defining a common interface for all devices:
+`SmartDevice` acts as an abstract base contract outlining the baseline behaviors required of every device:
 
 ```cpp
 class SmartDevice {
@@ -297,7 +297,7 @@ public:
 ```
 
 ### 3. Inheritance
-Concrete devices extend the shared abstraction:
+Specialized device implementations extend the shared base contract, inheriting common identity fields while introducing device-specific behaviors:
 
 ```
 SmartDevice
@@ -309,10 +309,10 @@ SmartDevice
 ```
 
 ### 4. Polymorphism
-`SmartDevice` pointers/references can refer to any concrete device type. Calling a virtual method (e.g. `turnOn()`) invokes the correct device-specific override at runtime.
+Upcasted `SmartDevice` references enable uniform manipulation of diverse hardware. Virtual method dispatches guarantee that operations like `turnOn()` or `turnOff()` invoke the appropriate child class implementation at runtime.
 
 ### 5. Composition
-`Room` **has-a** `DeviceManager`, which manages a collection of `SmartDevice` objects. This composition relationship models real-world ownership: a room owns and manages its devices, rather than devices existing independently.
+A `Room` instance maintains a `DeviceManager` via a **has-a** relationship, which in turn aggregates and manages individual smart devices. This composition pattern mirrors physical containment: rooms own their local device clusters.
 
 ---
 
@@ -320,45 +320,38 @@ SmartDevice
 
 | Feature | Purpose in This Project |
 |---|---|
-| `unordered_map` | Fast average-case lookup of user accounts by email |
-| `vector` | Dynamic storage of devices and menu-driven collections |
-| `unique_ptr` | Exclusive ownership and automatic cleanup of device objects |
-| `string` | Managing user credentials, device names, and identifiers |
-| References | Avoiding unnecessary copies when passing objects between functions |
-| Virtual functions | Enabling polymorphic device behavior |
-| Abstract classes | Defining a consistent device interface (`SmartDevice`) |
-| `dynamic_cast` | Safe downcasting when device-specific behavior is required |
-| Header/source separation | Clean modular structure and faster compilation |
-| Include guards | Preventing duplicate header inclusion |
+| `unordered_map` | Fast $\mathcal{O}(1)$ average-case account lookup indexed by user email |
+| `vector` | Dynamic storage and iteration over managed room device collections |
+| `unique_ptr` | Explicit resource ownership and automatic memory deallocation for smart devices |
+| `string` | Handling usernames, credentials, device tags, and room identifiers |
+| References (`&`) | Passing complex objects and subsystems across menus without expensive copying |
+| Virtual Functions | Enabling dynamic runtime dispatch across polymorphic device types |
+| Abstract Classes | Enforcing a standardized operational interface (`SmartDevice`) |
+| `dynamic_cast` | Safe runtime downcasting when querying specialized device methods |
+| Header / Source Separation | Clear modular decoupling between `.h` declarations and `.cpp` definitions |
+| Include Guards (`#pragma once` / `#ifndef`) | Preventing redundant header inclusion during compilation |
 
 ---
 
 ## 🧮 Memory Management
 
-The project uses smart pointers — specifically `unique_ptr<SmartDevice>` — to manage device lifetimes.
+ControlSphere adheres to modern C++ RAII (*Resource Acquisition Is Initialization*) guidelines:
 
-- **RAII** — resources are tied to object lifetime, ensuring automatic cleanup
-- **Automatic memory management** — no manual `delete` calls required
-- **Clear ownership semantics** — `DeviceManager` exclusively owns its devices
-- **Reduced memory leak risk** compared to raw pointer management
+- **Smart Pointers** — Devices are managed using `std::unique_ptr<SmartDevice>`, providing clear single-ownership semantics under `DeviceManager`.
+- **Automatic Deallocation** — When a `Room` or `DeviceManager` falls out of scope, all managed devices are cleaned up automatically without explicit `delete` calls.
+- **Leak Prevention** — Virtual destructors ensure proper teardown of derived device classes, eliminating resource leak risks.
 
 ---
 
 ## ✅ Input Validation
 
-The application defensively handles a range of invalid inputs, including:
+The console interface incorporates defensive input processing to prevent crashes and endless input loops:
 
-- Invalid menu choices
-- Non-numeric menu input
-- Invalid device selections
-- Duplicate email registration
-- Unknown user lookups
-- Invalid role assignment
-- Out-of-range brightness values
-- Out-of-range fan speed
-- Out-of-range AC temperature
-
-Input-stream failure handling (e.g. clearing failed `cin` states) is used where applicable to prevent infinite menu loops on invalid input.
+- Non-numeric input recovery (clearing `cin.fail()` states and flushing the input buffer)
+- Out-of-bounds menu selection rejection
+- Device parameter boundaries (validating fan speeds between 1–3, light brightness between 0–100%, and thermostat limits)
+- Duplicate email prevention during user registration
+- Validation of required user roles (`ADMIN` vs `USER`)
 
 ---
 
@@ -366,11 +359,11 @@ Input-stream failure handling (e.g. clearing failed `cin` states) is used where 
 
 | Operation | Average Case | Worst Case |
 |---|---|---|
-| User lookup by email (`unordered_map`) | O(1) | O(n) |
-| Device lookup (linear search) | O(n) | O(n) |
-| Automation execution (fixed device set) | O(1) | O(1) |
+| User lookup by email (`unordered_map`) | $\mathcal{O}(1)$ | $\mathcal{O}(n)$ |
+| Device lookup by ID (linear scan) | $\mathcal{O}(n)$ | $\mathcal{O}(n)$ |
+| Automation routine execution (fixed device count) | $\mathcal{O}(1)$ | $\mathcal{O}(1)$ |
 
-> `unordered_map` provides average-case O(1) lookup via hashing; worst-case degrades to O(n) under hash collisions.
+> `unordered_map` achieves constant-time $\mathcal{O}(1)$ lookups on average; worst-case complexity reaches $\mathcal{O}(n)$ only under theoretical hash bucket collisions.
 
 ---
 
@@ -409,9 +402,10 @@ ControlSphere/
 
 ### Prerequisites
 - A C++17-compatible compiler (GCC / MinGW recommended)
-- A terminal (Git Bash, Linux shell, or Windows terminal / PowerShell)
+- A terminal environment (PowerShell, Command Prompt, Git Bash, or Linux shell)
 
 ### Build
+Compile the complete project from the root directory:
 ```bash
 g++ -std=c++17 main.cpp src/*.cpp -Iinclude -o ControlSphere
 ```
@@ -423,9 +417,9 @@ g++ -std=c++17 main.cpp src/*.cpp -Iinclude -o ControlSphere
 ./ControlSphere
 ```
 
-**Windows:**
+**Windows (PowerShell / Command Prompt):**
 ```bash
-./ControlSphere.exe
+.\ControlSphere.exe
 ```
 
 ---
@@ -464,57 +458,52 @@ g++ -std=c++17 main.cpp src/*.cpp -Iinclude -o ControlSphere
 
 ## 🧪 Manual Testing
 
-The following checklist covers the core functional paths verified through manual testing:
+The following functional verification matrix outlines key scenarios verified in manual test runs:
 
-- [ ] Admin login
-- [ ] User login
-- [ ] Logout
-- [ ] Duplicate email rejection
-- [ ] Invalid credentials handling
-- [ ] Room selection
-- [ ] Light control (on/off/brightness)
-- [ ] Fan control (on/off/speed)
-- [ ] AC control (on/off/temperature)
-- [ ] Camera control (on/off/recording)
-- [ ] Door lock control
-- [ ] Security system arm/disarm
-- [ ] Good Night automation
-- [ ] Morning automation
-- [ ] Leave Home automation
-- [ ] Admin user management (create/delete/modify)
-- [ ] Invalid menu input handling
-- [ ] Invalid device input handling
+- [x] Admin login with default credentials (`admin@smarthome.com` / `admin123`)
+- [x] Standard user registration and subsequent login
+- [x] Clean session logout and return to main landing prompt
+- [x] Rejection of duplicate email account registrations
+- [x] Defense against invalid credential inputs
+- [x] Multi-room navigation (Living Room and Bedroom)
+- [x] Light controls (toggling power, adjusting brightness 0–100%)
+- [x] Fan controls (toggling power, validating speeds 1–3)
+- [x] AC controls (toggling power, setting temperature 16–30 °C)
+- [x] Camera operations (toggling power, starting / stopping recording)
+- [x] Door lock actuation (engaging lock, releasing unlock)
+- [x] Perimeter security system arming, disarming, and status inspection
+- [x] Execution of Good Night automation scenario
+- [x] Execution of Good Morning automation scenario
+- [x] Execution of Leaving Home automation scenario
+- [x] Admin account operations (creating accounts, listing users, checking user status)
+- [x] Input validation against non-numeric entries and out-of-range menu selections
 
-> No automated unit test suite currently exists; all verification is performed manually.
+> All system pathways are currently verified through manual interactive testing.
 
 ---
 
 ## 🚀 Future Improvements
 
-The following are potential future directions and are **not** part of the current implementation:
+Areas planned for potential architectural expansion include:
 
-- Persistent storage / database integration
-- Password hashing and credential encryption
-- REST API layer
-- Web or GUI interface
-- Scheduled/time-based automation
-- Event-driven architecture
-- Multithreading support
-- IoT / real device communication
-- Energy consumption monitoring
-- Notification system
-- Cloud synchronization
+- Persistent database integration (SQLite or file-backed serialization)
+- Secure credential storage using cryptographic hashing (e.g., bcrypt or Argon2)
+- Multi-threaded device simulation and event-driven notifications
+- Scheduled or cron-like automation triggers
+- REST API layer or web-based frontend interface
+- Hardware integration with physical IoT protocols (MQTT, Zigbee)
+- Energy consumption tracking and reporting per device
 
 ---
 
 ## 🧑‍💻 Technical Skills Demonstrated
 
-`C++` `C++17` `OOP` `STL` `Inheritance` `Polymorphism` `Abstraction` `Encapsulation` `Composition` `Smart Pointers` `unordered_map` `System Design` `Input Validation` `Modular Architecture`
+`C++` `C++17` `OOP` `STL` `Inheritance` `Polymorphism` `Abstraction` `Encapsulation` `Composition` `Smart Pointers` `RAII` `unordered_map` `System Design` `Input Validation` `Modular Architecture`
 
-
+---
 
 ## 👤 Author
 
-**Sanjay Kumar**
-B.Tech-Electrical Engineering
+**Sanoj Kumar**  
+B.Tech — Electrical Engineering  
 IIT (ISM) Dhanbad

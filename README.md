@@ -1,10 +1,10 @@
 # 🏠 ControlSphere — Smart Home Automation System in C++17
 
-[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue?style=flat-square&logo=c%2B%2B)](#)
-[![OOP](https://img.shields.io/badge/Paradigm-OOP-orange?style=flat-square)](#)
-[![STL](https://img.shields.io/badge/STL-Modern%20C%2B%2B-green?style=flat-square)](#)
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)](#)
-[![Platform](https://img.shields.io/badge/Platform-Console-lightgrey?style=flat-square)](#)
+![C++17](https://img.shields.io/badge/C%2B%2B-17-blue?style=flat-square&logo=c%2B%2B)
+![OOP](https://img.shields.io/badge/Paradigm-OOP-orange?style=flat-square)
+![STL](https://img.shields.io/badge/STL-Modern%20C%2B%2B-green?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
+![Platform](https://img.shields.io/badge/Platform-Console-lightgrey?style=flat-square)
 
 > A console-based smart home simulation developed with modern C++17, focusing on modular design, object-oriented programming, access control, and automated device coordination.
 
@@ -34,13 +34,13 @@ The project was developed to demonstrate how modern C++ concepts can be applied 
 ## ✨ Key Features
 
 | Category | Capabilities |
-|---|---|
-| **Authentication** | Two-tier access control (`ADMIN` / `USER`), unique email-keyed directory, duplicate prevention, and clean session logout |
-| **Device Control** | Granular state manipulation for Lights, Fans, AC units, Cameras, and Door Locks with parameterized boundary checks |
-| **Automation** | Multi-device preset workflows: Good Morning, Good Night, and Leaving Home |
-| **Security** | Centralized security system supporting immediate arming, disarming, and real-time status inquiry |
-| **User Management** | Administrator-exclusive user administration: register new accounts, remove users, and query account existence |
-| **Input Validation** | Defensive stream guards against non-numeric entries, out-of-range menu selections, and illegal device metrics |
+|:---|:---|
+| **Authentication** | Two-tier access control (`ADMIN` / `USER`), unique email-keyed account directory, duplicate account prevention, and clean session management |
+| **Device Control** | Granular state manipulation for Lights, Fans, AC units, Cameras, and Door Locks with parameterized boundary validation |
+| **Automation** | Multi-device coordinated routines: Good Morning, Good Night, Leaving Home, and Movie Mode |
+| **Security** | Centralized security system supporting immediate arming, disarming, and real-time status reporting |
+| **User Management** | Administrator-exclusive user administration: register new accounts, remove users, and verify account existence |
+| **Input Validation** | Defensive stream guards against non-numeric entries, out-of-range menu selections, and illegal device operational parameters |
 
 ---
 
@@ -53,11 +53,20 @@ ControlSphere enforces a **role-based access control (RBAC)** model dividing acc
 - Guardrails preventing duplicate email registrations
 - Privilege verification upon credential validation
 - Administrator-only operations for registering and deleting accounts
-- Built-in default administrator credentials initialized at startup (`admin@smarthome.com` / `admin123`)
+- Fast average-case account lookup powered by an in-memory STL `std::unordered_map`
 
-User records are maintained internally within an STL `unordered_map`, ensuring efficient average-case lookup when validating login credentials or checking user records.
+> [!NOTE]
+> **Learning & Demonstration Notice**: The authentication subsystem is designed strictly for demonstration and educational purposes. User accounts and sessions are maintained in memory for the duration of program execution. It does not implement password hashing, cryptographic encryption, or persistent database storage.
 
-> **Note:** Designed primarily as an architectural demonstration, this module stores credentials in memory during runtime and does not incorporate cryptographic hashing or persistent database storage.
+### 🔑 Default Demonstration Credentials
+
+For evaluation and immediate testing, the system initializes a built-in administrator account:
+
+| Attribute | Demonstration Value |
+|:---|:---|
+| **Email** | `admin@smarthome.com` |
+| **Password** | `admin123` |
+| **Role** | `ADMIN` |
 
 ---
 
@@ -82,22 +91,22 @@ Standard users have full access to inspect rooms, operate individual appliances,
 
 ## 🏘️ Room & Device Structure
 
-| Room | Devices |
-|---|---|
-| **Living Room** | Light, Fan, AC, Camera, Door Lock |
-| **Bedroom** | Light, Fan, AC, Camera, Door Lock |
+| Room | Initialized Smart Devices |
+|:---|:---|
+| **Living Room** | Light, Fan, Air Conditioner (AC), Camera, Door Lock |
+| **Bedroom** | Light, Fan, Air Conditioner (AC), Camera, Door Lock |
 
-Every `Room` container automatically initializes its dedicated set of appliances upon construction. The topology maintains a fixed hardware layout reflecting a typical residential floorplan.
+Every `Room` container automatically provisions its dedicated set of appliances upon construction. The topology maintains a fixed hardware layout reflecting a typical residential floorplan.
 
 ---
 
 ## 🔌 Device Functionality
 
-| Device | Capabilities |
-|---|---|
-| **Light** | Toggle power state (ON / OFF), set brightness level (0–100%) |
+| Device | Capabilities & Parameter Boundaries |
+|:---|:---|
+| **Light** | Toggle power state (ON / OFF), adjust brightness level (0–100%) |
 | **Fan** | Toggle power state (ON / OFF), adjust speed settings (levels 1–3) |
-| **AC** | Toggle power state (ON / OFF), adjust target cooling temperature (16–30 °C) |
+| **AC** | Toggle power state (ON / OFF), set target cooling temperature (16–30 °C) |
 | **Camera** | Toggle power state (ON / OFF), initiate and halt video recording |
 | **Door Lock** | Engage lock, release unlock, verify current latch status |
 
@@ -123,13 +132,14 @@ Security Status: ARMED
 
 The **AutomationEngine** orchestrates batch state updates across multiple rooms and subsystems in response to daily home routines:
 
-| Mode | Behavior |
-|---|---|
-| **Good Night** | Powers down living room lights and fans, adjusts bedroom comfort settings, secures all door locks, and arms the perimeter security system |
-| **Morning** | Deactivates security, unlocks entryways, and initializes daylight appliance states |
-| **Leave Home** | Shuts down idle appliances (lights, fans, air conditioning), secures all locks, and activates perimeter defense |
+| Mode | Coordinated Subsystem Behavior |
+|:---|:---|
+| **Good Night** | Powers down living room lights, fans, and AC; turns off bedroom lights; locks the main door; arms security perimeter |
+| **Good Morning** | Activates living room fan and AC; presets bedroom climate to 24 °C; unlocks main door; disarms security perimeter |
+| **Leaving Home** | Powers off all lights, fans, and AC units across both rooms; secures main door lock; arms security perimeter |
+| **Movie Mode** | Dims living room light to 30% brightness for entertainment ambiance |
 
-These routines illustrate synchronized coordination between independent device managers and security modules driven by a single invocation.
+These routines demonstrate synchronized coordination between independent device managers and security modules driven by a single invocation.
 
 ---
 
@@ -156,17 +166,17 @@ flowchart TD
 classDiagram
     class SmartDevice {
         <<abstract>>
-        +turnOn()
-        +turnOff()
+        +turnOn()*
+        +turnOff()*
     }
     class Light {
-        +setBrightness(int)
+        +setBrightness(int level)
     }
     class Fan {
-        +setSpeed(int)
+        +setSpeed(int speed)
     }
     class AC {
-        +setTemperature(int)
+        +setTemperature(int temp)
     }
     class Camera {
         +startRecording()
@@ -175,34 +185,56 @@ classDiagram
     class DoorLock {
         +lock()
         +unlock()
+        +isLocked() bool
     }
     class DeviceManager {
-        +addDevice()
-        +getDevice()
+        +addDevice(unique_ptr)
+        +findDevice(int id) SmartDevice*
+        +turnOnDevice(int id)
+        +turnOffDevice(int id)
     }
     class Room {
+        -int id
         -string name
+        +getDeviceManager() DeviceManager&
     }
     class AuthenticationSystem {
-        +login()
+        +login(string email, string pass) bool
         +logout()
-        +createUser()
-        +deleteUser()
+        +createUser(string, string, string, Role) bool
+        +deleteUser(string email) bool
+        +userStatus(string email) bool
+        +listUsers()
+        +isAdmin() bool
+        +isLoggedIn() bool
     }
     class User {
         -string email
-        -string role
+        -string password
+        -string name
+        -Role role
     }
-    class AdminMenu
-    class UserMenu
+    class AdminMenu {
+        +show()
+        +controlDevice()
+        +automationMenu()
+        +userManagementMenu()
+    }
+    class UserMenu {
+        +show()
+        +controlDevice()
+        +automationMenu()
+    }
     class AutomationEngine {
+        +goodMorning()
         +goodNight()
-        +morning()
-        +leaveHome()
+        +leavingHome()
+        +movieMode()
     }
     class SecuritySystem {
         +arm()
         +disarm()
+        +status()
     }
 
     SmartDevice <|-- Light
@@ -228,23 +260,33 @@ classDiagram
 
 ```mermaid
 flowchart TD
-    Start([Start]) --> Login[Login Screen]
-    Login --> Validate[Validate Credentials]
-    Validate --> Role{Role?}
+    Start([Start Application]) --> Login[Login Screen]
+    Login --> Validate{Valid Credentials?}
+    Validate -- No --> Login
+    Validate -- Yes --> Role{User Role}
     Role -->|ADMIN| AdminDash[Admin Dashboard]
     Role -->|USER| UserDash[User Dashboard]
 
     AdminDash --> AD1[Device Control]
-    AdminDash --> AD2[Automation]
-    AdminDash --> AD3[Security]
+    AdminDash --> AD2[Automation Scenarios]
+    AdminDash --> AD3[Security Monitoring]
     AdminDash --> AD4[User Management]
 
     UserDash --> UD1[Device Control]
-    UserDash --> UD2[Automation]
-    UserDash --> UD3[Security]
+    UserDash --> UD2[Automation Scenarios]
+    UserDash --> UD3[Security Monitoring]
 
-    AD1 & AD2 & AD3 & AD4 --> Logout([Logout])
-    UD1 & UD2 & UD3 --> Logout
+    AD1 --> AdminDash
+    AD2 --> AdminDash
+    AD3 --> AdminDash
+    AD4 --> AdminDash
+
+    UD1 --> UserDash
+    UD2 --> UserDash
+    UD3 --> UserDash
+
+    AdminDash --> Logout([Logout])
+    UserDash --> Logout
     Logout --> Login
 ```
 
@@ -254,11 +296,13 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Dashboard --> Control[Control & View Devices]
-    Control --> SelectRoom[Select Room]
-    SelectRoom --> SelectDevice[Select Device]
-    SelectDevice --> Operate[Perform Device Operation]
-    Operate --> Status[Display Updated Status]
+    Dashboard[Dashboard] --> Control[Control & View Devices]
+    Control --> SelectRoom[Select Room: Living Room / Bedroom]
+    SelectRoom --> SelectDevice[Select Appliance: Light / Fan / AC / Camera / Lock]
+    SelectDevice --> Action[Select Operation]
+    Action --> Execute[Validate Input & Execute Operation]
+    Execute --> Feedback[Display Status Output]
+    Feedback --> Control
 ```
 
 ---
@@ -267,18 +311,23 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Automation --> GN[Good Night]
-    Automation --> MR[Morning]
-    Automation --> LH[Leave Home]
+    Automation[Automation Menu] --> GN[Good Night]
+    Automation --> GM[Good Morning]
+    Automation --> LH[Leaving Home]
+    Automation --> MM[Movie Mode]
 
-    GN --> D1[Devices Updated]
-    GN --> S1[Security Armed]
+    GN --> GN1[Turn OFF Living Room Light, Fan, AC]
+    GN --> GN2[Turn OFF Bedroom Light]
+    GN --> GN3[Lock Main Door & Arm Security]
 
-    MR --> D2[Devices Updated]
-    MR --> S2[Security Disarmed]
+    GM --> GM1[Turn ON Living Room Fan & AC]
+    GM --> GM2[Set Bedroom AC to 24 C]
+    GM --> GM3[Unlock Main Door & Disarm Security]
 
-    LH --> D3[Devices Updated]
-    LH --> S3[Security Armed]
+    LH --> LH1[Turn OFF All Lights, Fans, ACs]
+    LH --> LH2[Lock Main Door & Arm Security]
+
+    MM --> MM1[Set Living Room Light to 30% Brightness]
 ```
 
 ---
@@ -324,18 +373,18 @@ A `Room` instance maintains a `DeviceManager` via a **has-a** relationship, whic
 
 ## 🧰 STL & Modern C++ Features
 
-| Feature | Purpose in This Project |
-|---|---|
-| `unordered_map` | Fast $\mathcal{O}(1)$ average-case account lookup indexed by user email |
-| `vector` | Dynamic storage and iteration over managed room device collections |
-| `unique_ptr` | Explicit resource ownership and automatic memory deallocation for smart devices |
-| `string` | Handling usernames, credentials, device tags, and room identifiers |
-| References (`&`) | Passing complex objects and subsystems across menus without expensive copying |
-| Virtual Functions | Enabling dynamic runtime dispatch across polymorphic device types |
-| Abstract Classes | Enforcing a standardized operational interface (`SmartDevice`) |
-| `dynamic_cast` | Safe runtime downcasting when querying specialized device methods |
-| Header / Source Separation | Clear modular decoupling between `.h` declarations and `.cpp` definitions |
-| Include Guards (`#pragma once` / `#ifndef`) | Preventing redundant header inclusion during compilation |
+| Modern C++ Feature | Implementation in ControlSphere |
+|:---|:---|
+| `std::unordered_map` | Fast $\mathcal{O}(1)$ average-case account lookup indexed by unique user email in `AuthenticationSystem` |
+| `std::vector` | Dynamic storage and iteration over polymorphic device pointers within `DeviceManager` |
+| `std::unique_ptr` | Explicit single-ownership resource management for smart devices, ensuring leak-free RAII cleanup |
+| `std::string` | Handling usernames, credentials, device tags, and room identifiers across modules |
+| References (`&`) | Passing core subsystems (rooms, authentication, security engine) across menus without copying overhead |
+| Virtual Functions | Enabling dynamic runtime dispatch for `turnOn()` and `turnOff()` across derived device types |
+| Abstract Classes | Defining a standardized polymorphic interface (`SmartDevice`) with pure virtual methods |
+| `dynamic_cast` | Safe runtime downcasting from `SmartDevice*` to specialized interfaces (`Light*`, `Fan*`, `AC*`, `DoorLock*`) |
+| Header / Source Separation | Modular layout with header declarations in `include/` and definitions in `src/` |
+| Include Guards | Preprocessor guards (`#ifndef` / `#define`) preventing duplicate header inclusion during compilation |
 
 ---
 
@@ -353,9 +402,9 @@ ControlSphere adheres to modern C++ RAII (*Resource Acquisition Is Initializatio
 
 The console interface incorporates defensive input processing to prevent crashes and endless input loops:
 
-- Non-numeric input recovery (clearing `cin.fail()` states and flushing the input buffer)
+- Non-numeric input recovery (clearing `cin.fail()` states and flushing the input buffer with `cin.ignore()`)
 - Out-of-bounds menu selection rejection
-- Device parameter boundaries (validating fan speeds between 1–3, light brightness between 0–100%, and thermostat limits)
+- Device parameter boundaries (validating fan speeds between 1–3, light brightness between 0–100%, and thermostat limits between 16–30 °C)
 - Duplicate email prevention during user registration
 - Validation of required user roles (`ADMIN` vs `USER`)
 
@@ -363,13 +412,11 @@ The console interface incorporates defensive input processing to prevent crashes
 
 ## 📊 Complexity Analysis
 
-| Operation | Average Case | Worst Case |
-|---|---|---|
-| User lookup by email (`unordered_map`) | $\mathcal{O}(1)$ | $\mathcal{O}(n)$ |
-| Device lookup by ID (linear scan) | $\mathcal{O}(n)$ | $\mathcal{O}(n)$ |
-| Automation routine execution (fixed device count) | $\mathcal{O}(1)$ | $\mathcal{O}(1)$ |
-
-> `unordered_map` achieves constant-time $\mathcal{O}(1)$ lookups on average; worst-case complexity reaches $\mathcal{O}(n)$ only under theoretical hash bucket collisions.
+| Operation | Average Case | Worst Case | Complexity Rationale |
+|:---|:---:|:---:|:---|
+| User lookup by email | $\mathcal{O}(1)$ | $\mathcal{O}(n)$ | Hash table lookup via `std::unordered_map`; degrades to linear only under hash bucket collisions |
+| Device lookup by ID | $\mathcal{O}(n)$ | $\mathcal{O}(n)$ | Linear search through room device vector via `DeviceManager::findDevice` |
+| Automation preset execution | $\mathcal{O}(1)$ | $\mathcal{O}(1)$ | Predetermined sequence of device and security state modifications across fixed room layout |
 
 ---
 
@@ -481,6 +528,7 @@ The following functional verification matrix outlines key scenarios verified in 
 - [x] Execution of Good Night automation scenario
 - [x] Execution of Good Morning automation scenario
 - [x] Execution of Leaving Home automation scenario
+- [x] Execution of Movie Mode automation scenario
 - [x] Admin account operations (creating accounts, listing users, checking user status)
 - [x] Input validation against non-numeric entries and out-of-range menu selections
 

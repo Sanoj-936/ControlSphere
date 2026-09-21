@@ -1,27 +1,33 @@
-# 🏠 ControlSphere — Smart Home Automation System (C++17)
+# 🏠 ControlSphere — Smart Home Automation System in C++17
 
-> A modular, console-driven smart home management platform built in modern C++17 to showcase clean object-oriented architecture, role-based access control, and coordinated device automation.
+[![C++17](https://img.shields.io/badge/C%2B%2B-17-blue?style=flat-square&logo=c%2B%2B)](#)
+[![OOP](https://img.shields.io/badge/Paradigm-OOP-orange?style=flat-square)](#)
+[![STL](https://img.shields.io/badge/STL-Modern%20C%2B%2B-green?style=flat-square)](#)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)](#)
+[![Platform](https://img.shields.io/badge/Platform-Console-lightgrey?style=flat-square)](#)
 
-![C++17](https://img.shields.io/badge/C%2B%2B-17-blue.svg?style=flat-square&logo=c%2B%2B)
-![OOP](https://img.shields.io/badge/Paradigm-OOP-orange.svg?style=flat-square)
-![STL](https://img.shields.io/badge/STL-Modern%20C%2B%2B-green.svg?style=flat-square)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg?style=flat-square)
-![Platform](https://img.shields.io/badge/Platform-Console-lightgrey.svg?style=flat-square)
+> A console-based smart home simulation developed with modern C++17, focusing on modular design, object-oriented programming, access control, and automated device coordination.
 
 ---
 
 ## 📖 Overview
 
-**ControlSphere** is an interactive, terminal-based smart home management system engineered in **C++17**. It models an interconnected residential environment where users can inspect and operate individual room appliances, configure security perimeters, and trigger coordinated automation routines through an intuitive, menu-driven interface.
+ControlSphere is a terminal-based smart home automation system developed in **C++17**. It provides a simulated residential environment where users can manage appliances, monitor room devices, configure security features, and execute automation routines through a menu-driven interface.
 
-The environment simulates two distinct living spaces:
+The simulation includes two rooms:
 
 - **Living Room**
 - **Bedroom**
 
-When each room initializes, it automatically provisions an essential suite of smart appliances: **Light, Fan, Air Conditioner (AC), Camera, and Door Lock**.
+Each room is equipped with a predefined set of smart devices:
 
-I built this project to explore how modern C++ patterns, clean separation of concerns, and robust object-oriented principles translate into a maintainable backend design. Rather than relying on monolithic scripts, ControlSphere structures its components around strong encapsulation, polymorphic device interfaces, smart-pointer memory ownership, and defensive input handling.
+- **Light**
+- **Fan**
+- **Air Conditioner (AC)**
+- **Camera**
+- **Door Lock**
+
+The project was developed to demonstrate how modern C++ concepts can be applied to build a structured and maintainable system. It makes use of object-oriented design, encapsulation, polymorphism, smart-pointer-based resource management, and input validation to organize the different components of the application.
 
 ---
 

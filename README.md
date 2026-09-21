@@ -510,6 +510,4 @@ Areas planned for potential architectural expansion include:
 
 ## 👤 Author
 
-**Sanoj Kumar**  
-B.Tech — Electrical Engineering  
-IIT (ISM) Dhanbad
+**Sanoj Kumar**

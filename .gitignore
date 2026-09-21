@@ -1,0 +1,25 @@
+# Compiled executable
+smart_home
+smart_home.exe
+ControlSphere
+ControlSphere.exe
+
+# Object files
+*.o
+*.obj
+
+# VS Code
+.vscode/
+
+# Build directories
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# How to run this project:
+# g++ -std=c++17 main.cpp src/*.cpp -Iinclude -o ControlSphere
+# ./ControlSphere (or .\ControlSphere.exe on Windows)
+# admin@smarthome.com
+# admin123
